@@ -18,11 +18,12 @@ def build_site():
 
     # Render
     # We pass the products list as a JSON string to be embedded in JS
-    # Indent for readability and better git diffs
+    # Indent for readability
     products_json = json.dumps(products, indent=4)
     
-    # Escape </script> to prevent breaking inline scripts
-    products_json = products_json.replace("</script>", "<\\/script>")
+    # CRITICAL: Escape forward slashes to prevent </script> or similar tag-breaking sequences
+    # This turns "https://example.com" into "https:\/\/example.com", which is valid JS/JSON
+    products_json = products_json.replace("/", "\\/")
     
     output_html = template.render(products_json=products_json)
 
